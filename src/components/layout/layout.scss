@@ -27,3 +27,18 @@
 .logout span, .logout i {
     color: white;
 }
+
+.outer {
+	width: 100%;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.left, .right {
+	display:inline-block;
+}
+.left {
+	width: auto;
+}
+.right {
+  width: 100%;
+}

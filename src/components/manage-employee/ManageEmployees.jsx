@@ -1,5 +1,15 @@
 import React, { Component } from "react";
-import { Table, Icon, Input, Row, Col, Button, Modal } from "antd";
+import {
+  Table,
+  Icon,
+  Input,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Divider,
+  message
+} from "antd";
 import API from "../../helpers/api.js";
 import EditDrawer from "./EditDrawer";
 import InsertDrawer from "./InsertDrawer";
@@ -71,6 +81,20 @@ class ManageEmployees extends Component {
                 type="delete"
                 style={{ cursor: "pointer" }}
                 onClick={() => this.deleteById(record.key, record.avatar)}
+              />
+            )
+          },
+          {
+            title: "Verify",
+            className: "column-actions",
+            render: (text, record, index) => (
+              <Icon
+                key={record.key}
+                type={record.verified === "Not Verified" ? "check" : "close"}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  this.checkForVerified(record.key, record.verified, index)
+                }
               />
             )
           }
@@ -195,11 +219,7 @@ class ManageEmployees extends Component {
         deleteId: getId,
         deleteAvatar: getAvatar
       });
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name
-    })
+    }
   };
 
   deleteById = (key, avatar) => {
@@ -210,6 +230,29 @@ class ManageEmployees extends Component {
       }),
       () => this.handleDeleteEmployee()
     );
+  };
+
+  checkForVerified = async (key, verified, index) => {
+    const verifiedStatus = verified === "Not Verified" ? 1 : 0;
+    await API.post(`/employees/verify`, {
+      emp_id: key,
+      emp_verified: verifiedStatus
+    })
+      .then(() => {
+        const success = verifiedStatus === 1 ? "Verified" : "Unverified";
+        const newData = [...this.state.employees];
+        newData[index].verified =
+          verifiedStatus === 1 ? "Verified" : "Not Verified";
+
+        this.setState({
+          employees: newData,
+          backupEmployeeData: newData
+        });
+        message.success(`${success} this employee success`);
+      })
+      .catch(() => {
+        message.error("Something has wrong :{");
+      });
   };
 
   success = () => {
@@ -275,6 +318,8 @@ class ManageEmployees extends Component {
 
     return (
       <div>
+        <h3>Manage Employee</h3>
+        <Divider />
         <Row>
           <Col span={12}>
             <Button type="primary" icon="plus" onClick={this.openInsertDrawer}>
@@ -304,13 +349,15 @@ class ManageEmployees extends Component {
         </Row>
         <Row style={{ paddingTop: 25 }}>
           <Col span={24}>
-            <Table
-              pagination={{ pageSize: 10 }}
-              rowSelection={this.rowSelection}
-              columns={this.columns}
-              dataSource={employees}
-              loading={loading}
-            />
+            <div style={{ overflowX: "auto" }}>
+              <Table
+                pagination={{ pageSize: 10 }}
+                rowSelection={this.rowSelection}
+                columns={this.columns}
+                dataSource={employees}
+                loading={loading}
+              />
+            </div>
           </Col>
         </Row>
         {editEmployee.length > 0 && (

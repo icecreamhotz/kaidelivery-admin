@@ -55,7 +55,6 @@ const InsertModal = Form.create({ name: "insert_form" })(
 
       this.state = {
         resTypes: props.restypes,
-        loading: false,
         fileimg: null,
         preview: "",
         altimg: "",
@@ -64,9 +63,11 @@ const InsertModal = Form.create({ name: "insert_form" })(
           lng: 0,
           errorLatLng: true
         },
-        loadingMap: false,
+        loadingMap: true,
+        inputLoading: true,
         searchValue: "",
-        bounds: null
+        bounds: null,
+        isSearch: false
       };
     }
 
@@ -110,7 +111,6 @@ const InsertModal = Form.create({ name: "insert_form" })(
     };
 
     onMapClick = e => {
-      this.setState({ loadingMap: true });
       this.setState(
         prevState => ({
           center: {
@@ -153,7 +153,7 @@ const InsertModal = Form.create({ name: "insert_form" })(
               }
             );
           },
-          error => console.log(error)
+          error => console.error(error)
         );
       }
     };
@@ -184,7 +184,7 @@ const InsertModal = Form.create({ name: "insert_form" })(
 
     setValueToPlaceSearch = (lat, lng) => {
       if (
-        !this.state.loading ||
+        !this.state.loadingMap ||
         !this.state.inputLoading ||
         this.state.searchValue !== ""
       ) {
@@ -230,6 +230,8 @@ const InsertModal = Form.create({ name: "insert_form" })(
                     });
                   }
                 });
+              } else {
+                this.getGeoLocation();
               }
             }
           } else {

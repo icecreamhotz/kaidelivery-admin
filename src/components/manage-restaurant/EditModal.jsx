@@ -66,19 +66,15 @@ const EditModal = Form.create({ name: "edit_form" })(
           errorLatLng: true
         },
         loadingMap: false,
+        inputLoading: false,
         searchValue: "",
-        bounds: null
+        bounds: null,
+        isSearch: false
       };
     }
 
     componentDidMount() {
       this.mounted = true;
-    }
-
-    componentWillReceiveProps(nextProps) {
-      if (this.props.isScriptLoadSucceed !== nextProps.isScriptLoadSucceed) {
-        this.getGeoLocation();
-      }
     }
 
     componentWillUnmount() {
@@ -185,7 +181,7 @@ const EditModal = Form.create({ name: "edit_form" })(
 
     setValueToPlaceSearch = (lat, lng) => {
       if (
-        !this.state.loading ||
+        !this.state.loadingMap ||
         !this.state.inputLoading ||
         this.state.searchValue !== ""
       ) {
@@ -231,6 +227,8 @@ const EditModal = Form.create({ name: "edit_form" })(
                     });
                   }
                 });
+              } else {
+                this.getGeoLocation();
               }
             }
           } else {
@@ -329,6 +327,22 @@ const EditModal = Form.create({ name: "edit_form" })(
       return fakeDate;
     };
 
+    componentWillReceiveProps(nextProps) {
+      if (this.props.isScriptLoadSucceed !== nextProps.isScriptLoadSucceed) {
+        if (
+          this.props.restaurant[0].res_lng &&
+          this.props.restaurant[0].res_lat
+        ) {
+          this.setValueToPlaceSearch(
+            this.props.restaurant[0].res_lat,
+            this.props.restaurant[0].res_lng
+          );
+        } else {
+          this.getGeoLocation();
+        }
+      }
+    }
+
     render() {
       const {
         visible,
@@ -351,12 +365,15 @@ const EditModal = Form.create({ name: "edit_form" })(
           ? `${restaurant[0].res_logo}`
           : altimg;
 
-      const filterTypeName = this.props.restaurant[0].restype_id.map(item => {
-        const resTypeName = this.props.restypes.filter(
-          types => item === types.restype_id
-        );
-        return resTypeName[0].restype_name;
-      });
+      const filterTypeName =
+        this.props.restaurant[0].restype_id !== null
+          ? this.props.restaurant[0].restype_id.map(item => {
+              const resTypeName = this.props.restypes.filter(
+                types => item === types.restype_id
+              );
+              return resTypeName[0].restype_name;
+            })
+          : [];
       return (
         <Modal
           visible={visible}
@@ -441,8 +458,16 @@ const EditModal = Form.create({ name: "edit_form" })(
                 <Form.Item label="Telephone" extra="You can add two number.">
                   {getFieldDecorator("telephone", {
                     initialValue: {
-                      telephone_one: restaurant[0].res_telephone[0] || "",
-                      telephone_two: restaurant[0].res_telephone[1] || ""
+                      telephone_one:
+                        restaurant[0].res_telephone !== null &&
+                        restaurant[0].res_telephone[0]
+                          ? restaurant[0].res_telephone[0]
+                          : "",
+                      telephone_two:
+                        restaurant[0].res_telephone !== null &&
+                        restaurant[0].res_telephone[1]
+                          ? restaurant[0].res_telephone[1]
+                          : ""
                     },
                     rules: [
                       {

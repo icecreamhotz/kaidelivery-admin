@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Icon, Input, Row, Col, Button, Modal, Avatar } from "antd";
+import { Table, Icon, Input, Row, Col, Button, Modal, Avatar, Divider } from "antd";
 import API from "../../helpers/api.js";
 import EditDrawer from "./EditDrawer";
 import InsertDrawer from "./InsertDrawer";
@@ -182,11 +182,7 @@ class ManageUsers extends Component {
         deleteId: getId,
         deleteAvatar: getAvatar
       });
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name
-    })
+    }
   };
 
   deleteById = (key, avatar) => {
@@ -258,9 +254,10 @@ class ManageUsers extends Component {
       loading,
       deleteId
     } = this.state;
-    console.log(editUser);
     return (
       <div>
+        <h3>Manage User</h3>
+        <Divider />
         <Row>
           <Col span={12}>
             <Button type="primary" icon="plus" onClick={this.openInsertDrawer}>
@@ -290,14 +287,16 @@ class ManageUsers extends Component {
         </Row>
         <Row style={{ paddingTop: 25 }}>
           <Col span={24}>
-            <Table
-              pagination={{ pageSize: 10 }}
-              rowSelection={this.rowSelection}
-              columns={this.columns}
-              rowKey="user_id"
-              dataSource={users}
-              loading={loading}
-            />
+            <div style={{ overflowX: "auto" }}>
+              <Table
+                pagination={{ pageSize: 10 }}
+                rowSelection={this.rowSelection}
+                columns={this.columns}
+                rowKey="user_id"
+                dataSource={users}
+                loading={loading}
+              />
+            </div>
           </Col>
         </Row>
         {editUser.length > 0 && (

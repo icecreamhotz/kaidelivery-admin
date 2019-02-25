@@ -15,6 +15,7 @@ import Profile from "./components/manage-info/Profile";
 import ManageEmployees from "./components/manage-employee/ManageEmployees";
 import ManageUsers from "./components/manage-user/ManageUsers";
 import ManageRestaurants from "./components/manage-restaurant/ManageRestaurants";
+import InfoRate from './components/rate/InfoRate.jsx'
 
 class App extends Component {
   render() {
@@ -53,6 +54,12 @@ class App extends Component {
                 // location={location}
                 path="/restaurant"
                 component={ManageRestaurants}
+              />
+              <GuestRoute
+                exact
+                // location={location}
+                path="/rate"
+                component={InfoRate}
               />
             </Switch>
           </Layout>

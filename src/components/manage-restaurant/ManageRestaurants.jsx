@@ -1,5 +1,16 @@
 import React, { Component } from "react";
-import { Table, Icon, Input, Row, Col, Button, Modal, Avatar } from "antd";
+import {
+  Table,
+  Icon,
+  Input,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Avatar,
+  Divider,
+  message
+} from "antd";
 import API from "../../helpers/api.js";
 import InsertModal from "./InsertModal";
 import EditModal from "./EditModal";
@@ -25,8 +36,8 @@ class ManageRestaurants extends Component {
       backupRestaurantData: [],
       deleteId: [],
       deleteAvatar: [],
-      visibleEdit: false,
       visibleInsert: false,
+      visibleEdit: false,
       editRestaurant: [],
       loading: true
     };
@@ -39,16 +50,21 @@ class ManageRestaurants extends Component {
       {
         title: "Telephone",
         render: (text, record) => {
-          return `${
-            record.res_telephone.length === 1
-              ? `${record.res_telephone[0]}`
-              : `${record.res_telephone[0]} ${record.res_telephone[1]}`
-          }`;
+          if (record.res_telephone !== null) {
+            return `${
+              record.res_telephone !== null
+                ? `${record.res_telephone[0]}`
+                : `${record.res_telephone[0]}, ${record.res_telephone[1]}`
+            }`;
+          }
+          return `No`;
         }
       },
       {
         title: "Email",
-        dataIndex: "res_email"
+        render: (text, record) => {
+          return record.res_email !== null ? `${record.res_email}` : "No";
+        }
       },
       {
         title: "Owner",
@@ -57,6 +73,11 @@ class ManageRestaurants extends Component {
             ? `${record.user.name} ${record.user.lastname}`
             : "No";
         }
+      },
+      {
+        title: "Verifed",
+        render: (text, record) =>
+          record.res_status === "0" ? "Not Verified" : "Verifed"
       },
       {
         title: "Logo",
@@ -89,12 +110,14 @@ class ManageRestaurants extends Component {
           {
             title: "Delete",
             className: "column-actions",
-            render: (text, record) => (
+            render: (text, record, index) => (
               <Icon
                 key={record.key}
-                type="delete"
+                type={record.res_status === "0" ? "check" : "close"}
                 style={{ cursor: "pointer" }}
-                onClick={() => this.deleteById(record.user_id, record.avatar)}
+                onClick={() =>
+                  this.checkForVerified(record.res_id, record.res_status, index)
+                }
               />
             )
           }
@@ -135,7 +158,7 @@ class ManageRestaurants extends Component {
   handleSearchBox = e => {
     const value = e.target.value;
 
-    const { backupUsersData } = this.state;
+    const { backupRestaurantData } = this.state;
 
     const regexSpecialText = /[ !@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?]/;
 
@@ -144,11 +167,11 @@ class ManageRestaurants extends Component {
     }
 
     const regexText = new RegExp(`^.*${value}.*$`, "i");
-    const searchData = backupUsersData.filter(({ name }) =>
-      name.match(regexText)
+    const searchData = backupRestaurantData.filter(({ res_name }) =>
+      res_name.match(regexText)
     );
 
-    this.setState({ users: searchData });
+    this.setState({ restaurants: searchData });
   };
 
   showModal = () => {
@@ -164,11 +187,14 @@ class ManageRestaurants extends Component {
   showEditModal = res_id => {
     const { restaurants } = this.state;
     const filterRestaurant = restaurants.filter(item => item.res_id === res_id);
-    console.log(filterRestaurant);
     this.setState({
       editRestaurant: filterRestaurant,
       visibleEdit: true
     });
+  };
+
+  handleCancelEdit = () => {
+    this.setState({ visibleEdit: false, editRestaurant: [] });
   };
 
   showInsertConfirm = (values, img, latlng, choice) => {
@@ -225,6 +251,7 @@ class ManageRestaurants extends Component {
       bodyFormData.set("res_id", this.state.editRestaurant[0].res_id);
     }
     const endpoint = choice === "insert" ? "create" : "update";
+    console.log(endpoint);
 
     API.post(`/restaurants/${endpoint}`, bodyFormData, {
       headers: {
@@ -291,17 +318,13 @@ class ManageRestaurants extends Component {
   rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(selectedRowKeys);
-      const getId = selectedRows.map(item => item.user_id);
-      const getAvatar = selectedRows.map(item => item.avatar);
+      const getId = selectedRows.map(item => item.res_id);
+      const getAvatar = selectedRows.map(item => item.res_logo);
       this.setState({
         deleteId: getId,
         deleteAvatar: getAvatar
       });
-    },
-    getCheckboxProps: record => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name
-    })
+    }
   };
 
   deleteById = (key, avatar) => {
@@ -312,6 +335,28 @@ class ManageRestaurants extends Component {
       }),
       () => this.handleDeleteUser()
     );
+  };
+
+  checkForVerified = async (key, verified, index) => {
+    const verifiedStatus = verified === "0" ? "1" : "0";
+    await API.post(`/restaurants/verify`, {
+      res_id: key,
+      res_status: verifiedStatus
+    })
+      .then(() => {
+        const success = verifiedStatus === "1" ? "Verified" : "Unverified";
+        const newData = [...this.state.restaurants];
+        newData[index].res_status = verifiedStatus;
+
+        this.setState({
+          restaurants: newData,
+          backupRestaurantData: newData
+        });
+        message.success(`${success} this restaurant success`);
+      })
+      .catch(() => {
+        message.error("Something has wrong :{");
+      });
   };
 
   success = () => {
@@ -332,9 +377,9 @@ class ManageRestaurants extends Component {
   };
 
   handleDeleteUser = async () => {
-    await API.post("/users/delete", {
-      user_id: this.state.deleteId,
-      avatar: this.state.deleteAvatar
+    await API.post("/restaurants/delete", {
+      res_id: this.state.deleteId,
+      res_logo: this.state.deleteAvatar
     })
       .then(() => {
         this.setState(
@@ -372,14 +417,17 @@ class ManageRestaurants extends Component {
     const {
       restaurants,
       editRestaurant,
-      visibleEdit,
       visibleInsert,
+      visibleEdit,
       loading,
       deleteId,
       restypes
     } = this.state;
+    console.log(restypes);
     return (
       <div>
+        <h3>Manage Restaurant</h3>
+        <Divider />
         <Row>
           <Col span={12}>
             <Button type="primary" icon="plus" onClick={this.showModal}>
@@ -409,35 +457,36 @@ class ManageRestaurants extends Component {
         </Row>
         <Row style={{ paddingTop: 25 }}>
           <Col span={24}>
-            <Table
-              pagination={{ pageSize: 10 }}
-              rowSelection={this.rowSelection}
-              columns={this.columns}
-              rowKey="res_id"
-              dataSource={restaurants}
-              loading={loading}
-            />
+            <div style={{ overflowX: "auto" }}>
+              <Table
+                pagination={{ pageSize: 10 }}
+                rowSelection={this.rowSelection}
+                columns={this.columns}
+                rowKey="res_id"
+                dataSource={restaurants}
+                loading={loading}
+              />
+            </div>
           </Col>
         </Row>
-        {editRestaurant.length > 0 && (
+        {visibleEdit && editRestaurant.length > 0 && (
           <EditModal
             wrappedComponentRef={this.saveFormRef}
             visible={visibleEdit}
             restaurant={editRestaurant}
-            onCancel={this.handleCancel}
+            onCancel={this.handleCancelEdit}
             onCreate={this.handleCreate}
             restypes={restypes}
           />
         )}
-        {restypes.length > 0 && (
-          <InsertModal
-            wrappedComponentRef={this.saveFormRef}
-            visible={visibleInsert}
-            onCancel={this.handleCancel}
-            onCreate={this.handleCreate}
-            restypes={restypes}
-          />
-        )}
+
+        <InsertModal
+          wrappedComponentRef={this.saveFormRef}
+          visible={visibleInsert}
+          onCancel={this.handleCancel}
+          onCreate={this.handleCreate}
+          restypes={restypes}
+        />
       </div>
     );
   }

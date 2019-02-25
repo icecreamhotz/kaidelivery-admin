@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tabs, Icon } from "antd";
+import { Tabs, Icon, Divider } from "antd";
 import MyInfo from "./MyInfo";
 import ChangePassword from './ChangePassword';
 
@@ -9,6 +9,8 @@ class Profile extends Component {
   render() {
     return (
       <div>
+        <h3>Profile</h3>
+        <Divider />
         <Tabs defaultActiveKey="1">
           <TabPane
             tab={
