@@ -108,7 +108,7 @@ class ManageRestaurants extends Component {
             )
           },
           {
-            title: "Delete",
+            title: "Verify",
             className: "column-actions",
             render: (text, record, index) => (
               <Icon
@@ -423,7 +423,6 @@ class ManageRestaurants extends Component {
       deleteId,
       restypes
     } = this.state;
-    console.log(restypes);
     return (
       <div>
         <h3>Manage Restaurant</h3>

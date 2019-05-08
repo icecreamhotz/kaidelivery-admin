@@ -13,6 +13,8 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+import { userLoggedIn } from "./actions/user.js";
+
 import rootReducer from "./rootReducer";
 // import { userLoggedIn } from './actions/auth';
 
@@ -29,10 +31,10 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(thunk))
 );
 
-// if(localStorage.token) {
-//     const user = { token: localStorage.token }
-//     store.dispatch(userLoggedIn(user))
-// }
+if (localStorage.token) {
+  const employee = { token: localStorage.token };
+  store.dispatch(userLoggedIn(employee));
+}
 
 // if(localStorage.lang) {
 //     store.dispatch(localeSet(localStorage.lang))

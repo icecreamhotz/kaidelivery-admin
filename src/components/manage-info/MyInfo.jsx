@@ -80,7 +80,7 @@ class MyInfo extends Component {
     });
   };
 
-  handleUpdateData = value => {
+  handleUpdateData = async value => {
     this.setState({
       loading: true
     });
@@ -90,12 +90,12 @@ class MyInfo extends Component {
     let bodyFormData = new FormData();
     bodyFormData.set("emp_name", value.emp_name);
     bodyFormData.set("emp_lastname", value.emp_lastname);
-    bodyFormData.set("emp_idcard", value.emp_idcard);
-    bodyFormData.set("emp_telephone", value.emp_telephone);
+    bodyFormData.set("emp_idcard", value.emp_idcard.emp_idcard);
+    bodyFormData.set("emp_telephone", value.emp_telephone.emp_telephone);
     bodyFormData.set("emp_address", value.emp_address);
     bodyFormData.append("image", newAvatar);
 
-    API.post(`/employees/update/info`, bodyFormData, {
+    await API.post(`/employees/update/info`, bodyFormData, {
       headers: {
         "content-type": "multipart/form-data"
       }

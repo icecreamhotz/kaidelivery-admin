@@ -219,6 +219,7 @@ class InfoRate extends React.Component {
             edit: false,
             data: responseData
           });
+          this.success()
         })
       )
       .catch(() => {

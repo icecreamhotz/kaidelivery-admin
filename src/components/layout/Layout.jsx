@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Layout, Menu, Icon } from "antd";
 import "./layout.scss";
 import { NavLink } from "react-router-dom";
+import { logout } from '../../actions/user.js';
+import { connect } from 'react-redux'
 
 const { Header, Sider, Footer, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -14,8 +16,12 @@ const menu = [
     }
 ]
 
-const HomePage = ({ children }) => {
+const HomePage = ({ children, logout }) => {
   const [collapsed, toggle] = useState(false);
+
+  const onClickLogout = () => {
+    logout()
+  }
 
   return (
     <Layout>
@@ -58,7 +64,7 @@ const HomePage = ({ children }) => {
             <Menu.Item key="4">
               <NavLink to="/restaurant">ข้อมูลร้านอาหาร</NavLink>
             </Menu.Item>
-            <Menu.Item key="5">อนุมัติเปลี่ยนแปลงข้อมูล</Menu.Item>
+            <Menu.Item key="5"><NavLink to="/foodchangelist">อนุมัติเปลี่ยนแปลงข้อมูล</NavLink></Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub3"
@@ -69,8 +75,8 @@ const HomePage = ({ children }) => {
               </span>
             }
           >
-            <Menu.Item key="6">คำติชมร้านอาหาร</Menu.Item>
-            <Menu.Item key="7">คำติชมพนักงาน</Menu.Item>
+            <Menu.Item key="6"><NavLink to="/comment/restaurant">คำติชมร้านอาหาร</NavLink></Menu.Item>
+            <Menu.Item key="7"><NavLink to="/comment/employee">คำติชมพนักงาน</NavLink></Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub4"
@@ -105,8 +111,8 @@ const HomePage = ({ children }) => {
               </span>
             }
           >
-            <Menu.Item key="10">ข้อมูลรายรับ</Menu.Item>
-            <Menu.Item key="11">ข้อมูลรายจ่าย</Menu.Item>
+            <Menu.Item key="10"><NavLink to="/ledger/account">ข้อมูลรายรับ</NavLink></Menu.Item>
+            <Menu.Item key="11"><NavLink to="/ledger/expense">ข้อมูลรายจ่าย</NavLink></Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub7"
@@ -117,7 +123,7 @@ const HomePage = ({ children }) => {
               </span>
             }
           >
-            <Menu.Item key="12">สรุปข้อมูลบัญชี</Menu.Item>
+            <Menu.Item key="12"><NavLink to="/report/ledger">สรุปข้อมูลบัญชี</NavLink></Menu.Item>
             <Menu.Item key="13">สรุปข้อมูลรายได้</Menu.Item>
             <Menu.Item key="14">สรุปจำนวนผู้ใช้บริการ</Menu.Item>
             <Menu.Item key="15">สรุปข้อมูลรายได้ส่วนแบ่งร้านอาหาร</Menu.Item>
@@ -127,7 +133,7 @@ const HomePage = ({ children }) => {
             <Icon type="rocket" />
             <span>ติดตามตำแหน่งพนักงาน</span>
           </Menu.Item>
-          <Menu.Item className="logout">
+          <Menu.Item className="logout" onClick={() => onClickLogout()}>
             <Icon type="left-circle" />
             <span>ออกจากระบบ</span>
           </Menu.Item>
@@ -165,4 +171,4 @@ const HomePage = ({ children }) => {
   );
 };
 
-export default HomePage;
+export default connect(null , { logout })(HomePage);

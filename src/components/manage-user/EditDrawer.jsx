@@ -21,7 +21,7 @@ class EditDrawer extends Component {
       email: props.user[0].email,
       telephone: props.user[0].telephone,
       address: props.user[0].address,
-      avatar: props.user[0].avatar,
+      avatar: props.user[0].avatar || "noimg.png",
       provider: props.user[0].provider,
       loading: false,
       fileimg: null,

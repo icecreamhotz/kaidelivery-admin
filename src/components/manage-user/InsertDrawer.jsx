@@ -140,18 +140,28 @@ class InsertDrawer extends Component {
         const checkEmail = await API.post("/users/checkemail", {
           email: email
         });
-        const duplicateEmail = checkEmail.data.username;
+        const duplicateEmail = checkEmail.data.email;
 
         if (
           (duplicateUsername && username !== this.state.old_username) ||
           (duplicateEmail && email !== this.state.old_email)
         ) {
-          this.props.form.setFields({
-            username: {
-              value: username,
-              errors: [new Error("This username has been using.")]
-            }
-          });
+          if(duplicateUsername) {
+            this.props.form.setFields({
+              username: {
+                value: username,
+                errors: [new Error("This username has been using.")]
+              }
+            });
+          } else if(duplicateEmail) {
+            this.props.form.setFields({
+              email: {
+                value: email,
+                errors: [new Error("This email has been using.")]
+              }
+            });
+          }
+          
         } else {
           this.showInsertConfirm(values);
         }
@@ -165,7 +175,7 @@ class InsertDrawer extends Component {
     return (
       <div>
         <Drawer
-          title="Add a new employee..."
+          title="Add a new user..."
           width={720}
           onClose={this.onClose}
           visible={this.props.visible}

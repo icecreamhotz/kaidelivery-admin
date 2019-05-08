@@ -13,8 +13,8 @@ export const userLoggedOut = () => ({
 export const login = credentials => async dispatch =>
   await API.post("/employees/login", credentials).then(emp => {
     if (emp.data.status) {
-      localStorage.token = emp.data.response.token;
-      dispatch(userLoggedIn(emp.data.response.token));
+      localStorage.token = emp.data.data.token;
+      dispatch(userLoggedIn(emp.data.data.token));
       return emp;
     }
     return emp;
