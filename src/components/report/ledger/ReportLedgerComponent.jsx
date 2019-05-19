@@ -3,7 +3,6 @@ import { Radio, DatePicker, Row } from "antd";
 import API from "../../../helpers/api.js";
 import Loading from "../../loaders/loading";
 import moment from "moment";
-import "moment/locale/th";
 
 import LineChart from "./LineChart";
 moment.locale("en");
@@ -118,7 +117,7 @@ class ReportLedgerComponent extends Component {
             <Radio value={2}>Year</Radio>
           </RadioGroup>
         </Row>
-        <Row style={{ marginTop: 20 }}>
+        <Row style={{ paddingTop: 20 }}>
           {value === 0 && (
             <DatePicker onChange={this.onChangeDay} defaultValue={day} />
           )}
@@ -135,10 +134,11 @@ class ReportLedgerComponent extends Component {
               onChange={this.onChangeDay}
               defaultValue={day}
               format="YYYY"
+              onPanelChange={this.onChangeDay}
             />
           )}
         </Row>
-        <Row style={{ marginTop: 20 }}>
+        <Row style={{ paddingTop: 20 }}>
           <LineChart label={label} data={data} />
         </Row>
       </div>

@@ -9,7 +9,8 @@ import {
   Modal,
   Avatar,
   Divider,
-  message
+  message,
+  Form
 } from "antd";
 import API from "../../helpers/api.js";
 import InsertModal from "./InsertModal";
@@ -23,8 +24,105 @@ import "./managerestaurant.scss";
 
 moment.locale("th");
 
+const FormItem = Form.Item;
+
 const Search = Input.Search;
 const confirm = Modal.confirm;
+const EditableContext = React.createContext();
+
+const EditableRow = ({ form, index, ...props }) => (
+  <EditableContext.Provider value={form}>
+    <tr {...props} />
+  </EditableContext.Provider>
+);
+
+const EditableFormRow = Form.create()(EditableRow);
+
+class EditableCell extends React.Component {
+  state = {
+    editing: false
+  };
+
+  toggleEdit = () => {
+    const editing = !this.state.editing;
+    this.setState({ editing }, () => {
+      if (editing) {
+        this.input.focus();
+      }
+    });
+  };
+
+  save = e => {
+    const { record, handleSave } = this.props;
+    this.form.validateFields((error, values) => {
+      if (error && error[e.currentTarget.id]) {
+        return;
+      }
+      this.toggleEdit();
+      handleSave({ ...record, ...values });
+    });
+  };
+
+  render() {
+    const { editing } = this.state;
+    const {
+      editable,
+      dataIndex,
+      title,
+      record,
+      index,
+      handleSave,
+      ...restProps
+    } = this.props;
+    return (
+      <td {...restProps}>
+        {editable ? (
+          <EditableContext.Consumer>
+            {form => {
+              this.form = form;
+              return editing ? (
+                <FormItem style={{ margin: 0 }}>
+                  {form.getFieldDecorator(dataIndex, {
+                    rules: [
+                      {
+                        required: true,
+                        message: `Quota is required.`
+                      }
+                    ],
+                    initialValue: record[dataIndex]
+                  })(
+                    <div>
+                      <Input
+                        ref={node => (this.input = node)}
+                        onPressEnter={this.save}
+                        onBlur={this.save}
+                        style={{
+                          width: 50
+                        }}
+                      />
+                      <span style={{ marginLeft: 10 }}>%</span>
+                    </div>
+                  )}
+                </FormItem>
+              ) : (
+                <div
+                  className="editable-cell-value-wrap"
+                  style={{ paddingRight: 24 }}
+                  onClick={this.toggleEdit}
+                >
+                  {restProps.children}
+                  <span style={{ marginLeft: 10 }}>%</span>
+                </div>
+              );
+            }}
+          </EditableContext.Consumer>
+        ) : (
+          restProps.children
+        )}
+      </td>
+    );
+  }
+}
 
 class ManageRestaurants extends Component {
   constructor(props) {
@@ -91,6 +189,11 @@ class ManageRestaurants extends Component {
           ) : (
             <Avatar size="large" icon="shop" />
           )
+      },
+      {
+        title: "Quota",
+        dataIndex: "res_quota",
+        editable: true
       },
       {
         title: "Actions",
@@ -413,6 +516,36 @@ class ManageRestaurants extends Component {
     this.formRef = formRef;
   };
 
+  updateQuota = async row => {
+    await API.post("/restaurants/update/quota", {
+      res_id: row.res_id,
+      quota: row.res_quota
+    })
+      .then(res => {
+        message.success("Update Success!");
+        this.setState({ loading: true });
+      })
+      .catch(err => {
+        message.error("Something has wrong :(");
+        this.setState({
+          loading: false
+        });
+      });
+  };
+
+  handleSave = row => {
+    const newData = [...this.state.restaurants];
+    const index = newData.findIndex(item => row.res_id === item.res_id);
+    const item = newData[index];
+    newData.splice(index, 1, {
+      ...item,
+      ...row
+    });
+    this.setState({ restaurants: newData, loading: true }, () => {
+      this.updateQuota(row);
+    });
+  };
+
   render() {
     const {
       restaurants,
@@ -423,6 +556,27 @@ class ManageRestaurants extends Component {
       deleteId,
       restypes
     } = this.state;
+    const components = {
+      body: {
+        row: EditableFormRow,
+        cell: EditableCell
+      }
+    };
+    const columns = this.columns.map(col => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          editable: col.editable,
+          dataIndex: col.dataIndex,
+          title: col.title,
+          handleSave: this.handleSave
+        })
+      };
+    });
     return (
       <div>
         <h3>Manage Restaurant</h3>
@@ -458,12 +612,12 @@ class ManageRestaurants extends Component {
           <Col span={24}>
             <div style={{ overflowX: "auto" }}>
               <Table
+                components={components}
+                rowClassName={() => "editable-row"}
+                dataSource={restaurants}
+                columns={columns}
                 pagination={{ pageSize: 10 }}
                 rowSelection={this.rowSelection}
-                columns={this.columns}
-                rowKey="res_id"
-                dataSource={restaurants}
-                loading={loading}
               />
             </div>
           </Col>

@@ -8,7 +8,8 @@ import {
   Input,
   DatePicker,
   InputNumber,
-  message
+  message,
+  Select,
 } from "antd";
 import API from "../../helpers/api";
 import moment from "moment";
@@ -16,15 +17,25 @@ import "moment/locale/th";
 
 moment.locale("th");
 
+const Option = Select.Option;
+
 class CreateAccountComponent extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       modal: false,
-      loading: false
+      loading: false,
+      ledger: 0
     };
   }
+
+  handleChange = value => {
+    console.log(value);
+    this.setState({
+      ledger: value
+    });
+  };
 
   setModaleVisible = data => {
     this.setState({
@@ -42,27 +53,29 @@ class CreateAccountComponent extends Component {
           {
             loading: true
           },
-          () => this.insertThisAccount(values)
+          () => this.insertThisLedger(values)
         );
       }
     });
   };
 
-  insertThisAccount = async values => {
+  insertThisLedger = async values => {
+    const { choice } = this.state;
     const data = {
-      accName: values.acc_name,
-      accDetails: values.acc_details,
-      accPrice: values.acc_price,
-      accDate: values.acc_date
+      name: values.name,
+      details: values.details,
+      price: values.price,
+      date: values.date
     };
-    await API.post("/accounts/", data)
+    const url = choice === "0" ? "/accounts/" : "/expenses/";
+    await API.post(url, data)
       .then(() => {
         this.setState({
           loading: false
         });
         this.props.form.resetFields();
         this.props.updateRow(values);
-        message.success("Insert account success!");
+        message.success("Success!");
       })
       .catch(err => {
         this.props.setLoading(false);
@@ -86,7 +99,7 @@ class CreateAccountComponent extends Component {
           Create
         </Button>
         <Modal
-          title="Create some account"
+          title="Create some ledger"
           centered
           visible={modal}
           onOk={() => this.setModaleVisible(false)}
@@ -96,8 +109,8 @@ class CreateAccountComponent extends Component {
           <Form onSubmit={this.handleSubmit} layout="vertical">
             <Row>
               <Col span={24}>
-                <Form.Item label="Account">
-                  {getFieldDecorator("acc_name", {
+                <Form.Item label="Topic">
+                  {getFieldDecorator("name", {
                     rules: [
                       {
                         required: true,
@@ -111,7 +124,7 @@ class CreateAccountComponent extends Component {
             <Row>
               <Col span={24}>
                 <Form.Item label="Detail">
-                  {getFieldDecorator("acc_details", {
+                  {getFieldDecorator("details", {
                     rules: [
                       {
                         required: true,
@@ -125,7 +138,7 @@ class CreateAccountComponent extends Component {
             <Row>
               <Col span={24}>
                 <Form.Item label="Total">
-                  {getFieldDecorator("acc_price", {
+                  {getFieldDecorator("price", {
                     rules: [
                       {
                         required: true,
@@ -139,7 +152,7 @@ class CreateAccountComponent extends Component {
             <Row>
               <Col span={24}>
                 <Form.Item label="Date">
-                  {getFieldDecorator("acc_date", {
+                  {getFieldDecorator("date", {
                     rules: [
                       {
                         required: true,
@@ -147,6 +160,27 @@ class CreateAccountComponent extends Component {
                       }
                     ]
                   })(<DatePicker style={{ width: "100%" }} />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Form.Item label="Ledger">
+                  {getFieldDecorator("type", {
+                    validateTrigger: ["onChange", "onBlur"],
+                    initialValue: "0",
+                    rules: [
+                      {
+                        required: true,
+                        message: "Please choose date in this account!"
+                      }
+                    ]
+                  })(
+                    <Select style={{ width: "100%" }}>
+                      <Option value="0">Revenue</Option>
+                      <Option value="1">Expense</Option>
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
             </Row>

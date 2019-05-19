@@ -1,27 +1,36 @@
 import React, { useState } from "react";
-import { Layout, Menu, Icon } from "antd";
+import { Layout, Menu, Dropdown, Icon } from "antd";
 import "./layout.scss";
 import { NavLink } from "react-router-dom";
-import { logout } from '../../actions/user.js';
-import { connect } from 'react-redux'
+import { logout } from "../../actions/user.js";
+import { localeSet } from "../../actions/locale.js";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
+
+import englishFlag from "../../resource/images/english.png";
+import thailandFlag from "../../resource/images/thailand.png";
 
 const { Header, Sider, Footer, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
-const menu = [
-    {
-        sub1: {
-            
-        }
-    }
-]
-
-const HomePage = ({ children, logout }) => {
+const HomePage = ({ children, logout, lang, localeSet }) => {
   const [collapsed, toggle] = useState(false);
 
   const onClickLogout = () => {
-    logout()
-  }
+    logout();
+  };
+
+  const localeMenu = (
+    <Menu>
+      <Menu.Item key="0">
+        <img
+          src={lang === "th" ? englishFlag : thailandFlag}
+          alt="locale"
+          onClick={() => localeSet(lang === "en" ? "th" : "en")}
+        />{" "}
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <Layout>
@@ -38,18 +47,26 @@ const HomePage = ({ children, logout }) => {
             title={
               <span>
                 <Icon type="user" />
-                <span>จัดการข้อมูลผู้ใช้ระบบ</span>
+                <span>
+                  <FormattedMessage id="nav.leftnavone" />
+                </span>
               </span>
             }
           >
             <Menu.Item key="1">
-              <NavLink to="/profile">ข้อมูลส่วนตัว</NavLink>
+              <NavLink to="/profile">
+                <FormattedMessage id="nav.leftnavtwo" />
+              </NavLink>
             </Menu.Item>
             <Menu.Item key="2">
-              <NavLink to="/employee">ข้อมูลพนักงาน</NavLink>
+              <NavLink to="/employee">
+                <FormattedMessage id="nav.leftnavthree" />
+              </NavLink>
             </Menu.Item>
             <Menu.Item key="3">
-              <NavLink to="/user">ข้อมูลลูกค้า</NavLink>
+              <NavLink to="/user">
+                <FormattedMessage id="nav.leftnavfour" />
+              </NavLink>
             </Menu.Item>
           </SubMenu>
           <SubMenu
@@ -57,99 +74,154 @@ const HomePage = ({ children, logout }) => {
             title={
               <span>
                 <Icon type="shop" />
-                <span>จัดการข้อมูลร้านอาหาร</span>
+                <span>
+                  <FormattedMessage id="nav.leftnavfive" />
+                </span>
               </span>
             }
           >
             <Menu.Item key="4">
-              <NavLink to="/restaurant">ข้อมูลร้านอาหาร</NavLink>
+              <NavLink to="/restaurant">
+                <FormattedMessage id="nav.leftnavsix" />
+              </NavLink>
             </Menu.Item>
-            <Menu.Item key="5"><NavLink to="/foodchangelist">อนุมัติเปลี่ยนแปลงข้อมูล</NavLink></Menu.Item>
+            <Menu.Item key="5">
+              <NavLink to="/foodchangelist">
+                <FormattedMessage id="nav.leftnavseven" />
+              </NavLink>
+            </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub3"
             title={
               <span>
                 <Icon type="like" />
-                <span>จัดการข้อมูลคำติชม</span>
+                <span>
+                  <FormattedMessage id="nav.leftnaveight" />
+                </span>
               </span>
             }
           >
-            <Menu.Item key="6"><NavLink to="/comment/restaurant">คำติชมร้านอาหาร</NavLink></Menu.Item>
-            <Menu.Item key="7"><NavLink to="/comment/employee">คำติชมพนักงาน</NavLink></Menu.Item>
+            <Menu.Item key="6">
+              <NavLink to="/comment/restaurant">
+                <FormattedMessage id="nav.leftnavnine" />
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="7">
+              <NavLink to="/comment/employee">
+                <FormattedMessage id="nav.leftnavten" />
+              </NavLink>
+            </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub4"
             title={
               <span>
                 <Icon type="car" />
-                <span>จัดการข้อมูลค่าจัดส่ง</span>
+                <span>
+                  <FormattedMessage id="nav.leftnavteleven" />
+                </span>
               </span>
             }
           >
             <Menu.Item key="8">
-              <NavLink to="/rate">แก้ไขราคาค่าจัดส่ง</NavLink>
+              <NavLink to="/rate">
+                <FormattedMessage id="nav.leftnavtwelve" />
+              </NavLink>
             </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub5"
             title={
               <span>
-                <Icon type="team" />
-                <span>จัดการข้อมูลส่วนแบ่ง</span>
+                <Icon type="calculator" />
+                <span>
+                  <FormattedMessage id="nav.leftnavfiveteen" />
+                </span>
               </span>
             }
           >
-            <Menu.Item key="9">ข้อมูลส่วนแบ่งพนักงาน</Menu.Item>
+            <Menu.Item key="9">
+              <NavLink to="/ledger/account">
+                <FormattedMessage id="nav.leftnavsixteen" />
+              </NavLink>
+            </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub6"
             title={
               <span>
-                <Icon type="calculator" />
-                <span>จัดการข้อมูลบัญชี</span>
-              </span>
-            }
-          >
-            <Menu.Item key="10"><NavLink to="/ledger/account">ข้อมูลรายรับ</NavLink></Menu.Item>
-            <Menu.Item key="11"><NavLink to="/ledger/expense">ข้อมูลรายจ่าย</NavLink></Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub7"
-            title={
-              <span>
                 <Icon type="file-done" />
-                <span>สรุปข้อมูลทั้งหมด</span>
+                <span>
+                  <FormattedMessage id="nav.leftnavseventeen" />
+                </span>
               </span>
             }
           >
-            <Menu.Item key="12"><NavLink to="/report/ledger">สรุปข้อมูลบัญชี</NavLink></Menu.Item>
-            <Menu.Item key="13">สรุปข้อมูลรายได้</Menu.Item>
-            <Menu.Item key="14">สรุปจำนวนผู้ใช้บริการ</Menu.Item>
-            <Menu.Item key="15">สรุปข้อมูลรายได้ส่วนแบ่งร้านอาหาร</Menu.Item>
-            <Menu.Item key="16">สรุปข้อมูลรายได้ส่วนแบ่งพนักงาน</Menu.Item>
+            <Menu.Item key="10">
+              <NavLink to="/report/ledger">
+                <FormattedMessage id="nav.leftnaveightteen" />
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="11">
+              <NavLink to="/report/employee/income">
+                <FormattedMessage id="nav.leftnavnineteen" />
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="12">
+              <NavLink to="/report/restaurant/user">
+                <FormattedMessage id="nav.leftnavtwenty" />
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="13">
+              <NavLink to="/report/restaurant/share">
+                <FormattedMessage id="nav.leftnavtwentyone" />
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item key="14">
+              <NavLink to="/report/employee/salary">
+                <FormattedMessage id="nav.leftnavtwentytwo" />
+              </NavLink>
+            </Menu.Item>
           </SubMenu>
-          <Menu.Item key="17">
+          <Menu.Item key="15">
             <Icon type="rocket" />
-            <span>ติดตามตำแหน่งพนักงาน</span>
+            <span>
+              <FormattedMessage id="nav.leftnavtwentythree" />
+            </span>
           </Menu.Item>
           <Menu.Item className="logout" onClick={() => onClickLogout()}>
             <Icon type="left-circle" />
-            <span>ออกจากระบบ</span>
+            <span>
+              <FormattedMessage id="nav.leftnavtwentyfour" />
+            </span>
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
         <Header style={{ background: "#fff", padding: 0 }}>
-          <div class="outer">
-            <div class="left">
+          <div className="outer">
+            <div className="left">
               <Icon
                 className="trigger"
                 type={collapsed ? "menu-unfold" : "menu-fold"}
                 onClick={() => toggle(!collapsed)}
               />
             </div>
-            <div class="right">Kai delivery Management System</div>
+            <div className="right">
+              <FormattedMessage id="nav.title" />
+            </div>
+            <div className="locale">
+              {" "}
+              <Dropdown overlay={localeMenu} trigger={["click"]}>
+                <a className="ant-dropdown-link" href="#">
+                  <img
+                    src={lang === "en" ? englishFlag : thailandFlag}
+                    alt="locale"
+                  />{" "}
+                </a>
+              </Dropdown>
+            </div>
           </div>
         </Header>
         <Content
@@ -171,4 +243,13 @@ const HomePage = ({ children, logout }) => {
   );
 };
 
-export default connect(null , { logout })(HomePage);
+function mapStateToProps(state) {
+  return {
+    lang: state.locale.lang
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  { logout, localeSet }
+)(HomePage);

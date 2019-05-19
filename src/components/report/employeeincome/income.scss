@@ -1,0 +1,25 @@
+th.column-money,
+td.column-money {
+  text-align: right !important;
+}
+
+th.column-center,
+td.column-center {
+  text-align: center !important;
+}
+
+.pointer:hover {
+    cursor: pointer !important;
+}
+
+.f-weight, .f-debt, .f-payed {
+  font-weight: bold;
+}
+
+.f-debt {
+  color: #1890ff;
+}
+
+.f-payed {
+  color: #52c41a;
+}

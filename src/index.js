@@ -15,16 +15,16 @@ import * as serviceWorker from "./serviceWorker";
 
 import { userLoggedIn } from "./actions/user.js";
 
+import { localeSet } from "./actions/locale";
+
 import rootReducer from "./rootReducer";
-// import { userLoggedIn } from './actions/auth';
 
-// import { addLocaleData } from 'react-intl';
-// import en from 'react-intl/locale-data/en';
-// import th from 'react-intk/locale-data/th';
-// import { localeSet } from './actions/locale';
+import { addLocaleData } from "react-intl";
+import en from "react-intl/locale-data/en";
+import th from "react-intl/locale-data/th";
 
-// addLocaleData(en);
-// addLocaleData(th);
+addLocaleData(en);
+addLocaleData(th);
 
 const store = createStore(
   rootReducer,
@@ -36,9 +36,9 @@ if (localStorage.token) {
   store.dispatch(userLoggedIn(employee));
 }
 
-// if(localStorage.lang) {
-//     store.dispatch(localeSet(localStorage.lang))
-// }
+if (localStorage.lang) {
+  store.dispatch(localeSet(localStorage.lang));
+}
 
 ReactDOM.render(
   <Provider store={store}>

@@ -33,12 +33,17 @@
   white-space:nowrap;
   overflow:hidden;
 }
-.left, .right {
+.left, .right, .locale {
 	display:inline-block;
 }
 .left {
 	width: auto;
 }
-.right {
-  width: 100%;
+.right, .locale {
+  width: auto;
+}
+
+.locale {
+  float: right;
+  padding-right: 20px;
 }
