@@ -62,7 +62,7 @@ class EmployeeIncomeComponent extends Component {
         dataIndex: "emp_avatar",
         render: text => {
           const profile = text === null ? "noimg.png" : text;
-          return <Avatar src={`http://localhost:3000/employees/${profile}`} />;
+          return <Avatar src={`https://kaidelivery-api.herokuapp.com/employees/${profile}`} />;
         }
       },
       {

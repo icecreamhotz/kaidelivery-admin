@@ -211,7 +211,7 @@ class EditDrawer extends Component {
     const { getFieldDecorator } = this.props.form;
     const previewImage =
       emp_avatar !== null && preview === ""
-        ? `http://localhost:3000/employees/${emp_avatar}`
+        ? `https://kaidelivery-api.herokuapp.com/employees/${emp_avatar}`
         : preview;
     const altImage =
       emp_avatar !== null && preview === ""

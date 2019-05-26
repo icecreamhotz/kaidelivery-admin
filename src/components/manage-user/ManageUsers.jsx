@@ -49,7 +49,7 @@ class ManageUsers extends Component {
           record.avatar !== null ? (
             <Avatar
               size="large"
-              src={`http://localhost:3000/users/${record.avatar}`}
+              src={`https://kaidelivery-api.herokuapp.com/users/${record.avatar}`}
               alt={record.avatar}
             />
           ) : (

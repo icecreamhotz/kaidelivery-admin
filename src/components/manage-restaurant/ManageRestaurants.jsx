@@ -183,7 +183,7 @@ class ManageRestaurants extends Component {
           record.res_logo !== null ? (
             <Avatar
               size="large"
-              src={`http://localhost:3000/restaurants/${record.res_logo}`}
+              src={`https://kaidelivery-api.herokuapp.com/restaurants/${record.res_logo}`}
               alt={record.res_name}
             />
           ) : (

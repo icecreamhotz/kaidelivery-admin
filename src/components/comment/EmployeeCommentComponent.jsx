@@ -112,7 +112,7 @@ class RestaurantCommentComponent extends Component {
                 author={<a>{author}</a>}
                 avatar={
                   <Avatar
-                    src={`http://localhost:3000/users/${avatar}`}
+                    src={`https://kaidelivery-api.herokuapp.com/users/${avatar}`}
                     alt={author}
                   />
                 }

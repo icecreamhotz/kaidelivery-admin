@@ -357,7 +357,7 @@ const EditModal = Form.create({ name: "edit_form" })(
 
       const previewImage =
         restaurant[0].res_logo !== null && preview === ""
-          ? `http://localhost:3000/restaurants/${restaurant[0].res_logo}`
+          ? `https://kaidelivery-api.herokuapp.com/restaurants/${restaurant[0].res_logo}`
           : preview;
 
       const altImage =

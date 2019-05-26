@@ -67,7 +67,7 @@ class ChooseRestaurantComponent extends Component {
                   <List.Item.Meta
                     avatar={
                       <Avatar
-                        src={`http://localhost:3000/restaurants/${
+                        src={`https://kaidelivery-api.herokuapp.com/restaurants/${
                           item.res_logo
                         }`}
                       />

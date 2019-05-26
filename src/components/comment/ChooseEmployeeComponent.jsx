@@ -51,7 +51,7 @@ class ChooseEmployeeComponent extends Component {
         <Loading loaded={loading} />
         {!edit ? (
           <div>
-            <Title>Choose The Restaurant</Title>
+            <Title>Choose Employee</Title>
             <List
               itemLayout="horizontal"
               dataSource={employees}
@@ -67,7 +67,7 @@ class ChooseEmployeeComponent extends Component {
                   <List.Item.Meta
                     avatar={
                       <Avatar
-                        src={`http://localhost:3000/employees/${
+                        src={`https://kaidelivery-api.herokuapp.com/employees/${
                           item.emp_avatar
                         }`}
                       />

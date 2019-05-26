@@ -13,7 +13,7 @@ import thailandFlag from "../../resource/images/thailand.png";
 const { Header, Sider, Footer, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
-const HomePage = ({ children, logout, lang, localeSet }) => {
+const HomePage = ({ children, logout, lang, localeSet, role }) => {
   const [collapsed, toggle] = useState(false);
 
   const onClickLogout = () => {
@@ -36,167 +36,206 @@ const HomePage = ({ children, logout, lang, localeSet }) => {
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed} width={220}>
         <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
-        >
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <Icon type="user" />
-                <span>
-                  <FormattedMessage id="nav.leftnavone" />
-                </span>
-              </span>
-            }
+        {role === 1 && (
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
           >
-            <Menu.Item key="1">
-              <NavLink to="/profile">
-                <FormattedMessage id="nav.leftnavtwo" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <NavLink to="/employee">
-                <FormattedMessage id="nav.leftnavthree" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <NavLink to="/user">
-                <FormattedMessage id="nav.leftnavfour" />
-              </NavLink>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="shop" />
+            <SubMenu
+              key="sub1"
+              title={
                 <span>
-                  <FormattedMessage id="nav.leftnavfive" />
+                  <Icon type="user" />
+                  <span>
+                    <FormattedMessage id="nav.leftnavone" />
+                  </span>
                 </span>
-              </span>
-            }
-          >
-            <Menu.Item key="4">
-              <NavLink to="/restaurant">
-                <FormattedMessage id="nav.leftnavsix" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="5">
-              <NavLink to="/foodchangelist">
-                <FormattedMessage id="nav.leftnavseven" />
-              </NavLink>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub3"
-            title={
-              <span>
-                <Icon type="like" />
+              }
+            >
+              <Menu.Item key="1">
+                <NavLink to="/profile">
+                  <FormattedMessage id="nav.leftnavtwo" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <NavLink to="/employee">
+                  <FormattedMessage id="nav.leftnavthree" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="3">
+                <NavLink to="/user">
+                  <FormattedMessage id="nav.leftnavfour" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub2"
+              title={
                 <span>
-                  <FormattedMessage id="nav.leftnaveight" />
+                  <Icon type="shop" />
+                  <span>
+                    <FormattedMessage id="nav.leftnavfive" />
+                  </span>
                 </span>
-              </span>
-            }
-          >
-            <Menu.Item key="6">
-              <NavLink to="/comment/restaurant">
-                <FormattedMessage id="nav.leftnavnine" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="7">
-              <NavLink to="/comment/employee">
-                <FormattedMessage id="nav.leftnavten" />
-              </NavLink>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub4"
-            title={
-              <span>
-                <Icon type="car" />
+              }
+            >
+              <Menu.Item key="4">
+                <NavLink to="/restaurant">
+                  <FormattedMessage id="nav.leftnavsix" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="5">
+                <NavLink to="/foodchangelist">
+                  <FormattedMessage id="nav.leftnavseven" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub3"
+              title={
                 <span>
-                  <FormattedMessage id="nav.leftnavteleven" />
+                  <Icon type="like" />
+                  <span>
+                    <FormattedMessage id="nav.leftnaveight" />
+                  </span>
                 </span>
-              </span>
-            }
-          >
-            <Menu.Item key="8">
-              <NavLink to="/rate">
-                <FormattedMessage id="nav.leftnavtwelve" />
-              </NavLink>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub5"
-            title={
-              <span>
-                <Icon type="calculator" />
+              }
+            >
+              <Menu.Item key="6">
+                <NavLink to="/comment/restaurant">
+                  <FormattedMessage id="nav.leftnavnine" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="7">
+                <NavLink to="/comment/employee">
+                  <FormattedMessage id="nav.leftnavten" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub4"
+              title={
                 <span>
-                  <FormattedMessage id="nav.leftnavfiveteen" />
+                  <Icon type="car" />
+                  <span>
+                    <FormattedMessage id="nav.leftnavteleven" />
+                  </span>
                 </span>
-              </span>
-            }
-          >
-            <Menu.Item key="9">
-              <NavLink to="/ledger/account">
-                <FormattedMessage id="nav.leftnavsixteen" />
-              </NavLink>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub6"
-            title={
-              <span>
-                <Icon type="file-done" />
+              }
+            >
+              <Menu.Item key="8">
+                <NavLink to="/rate">
+                  <FormattedMessage id="nav.leftnavtwelve" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub5"
+              title={
                 <span>
-                  <FormattedMessage id="nav.leftnavseventeen" />
+                  <Icon type="calculator" />
+                  <span>
+                    <FormattedMessage id="nav.leftnavfiveteen" />
+                  </span>
                 </span>
+              }
+            >
+              <Menu.Item key="9">
+                <NavLink to="/ledger/account">
+                  <FormattedMessage id="nav.leftnavsixteen" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub6"
+              title={
+                <span>
+                  <Icon type="file-done" />
+                  <span>
+                    <FormattedMessage id="nav.leftnavseventeen" />
+                  </span>
+                </span>
+              }
+            >
+              <Menu.Item key="10">
+                <NavLink to="/report/ledger">
+                  <FormattedMessage id="nav.leftnaveightteen" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="11">
+                <NavLink to="/report/employee/income">
+                  <FormattedMessage id="nav.leftnavnineteen" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="12">
+                <NavLink to="/report/restaurant/user">
+                  <FormattedMessage id="nav.leftnavtwenty" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="13">
+                <NavLink to="/report/restaurant/share">
+                  <FormattedMessage id="nav.leftnavtwentyone" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="14">
+                <NavLink to="/report/employee/salary">
+                  <FormattedMessage id="nav.leftnavtwentytwo" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <Menu.Item key="15">
+              <Icon type="rocket" />
+              <span>
+                <FormattedMessage id="nav.leftnavtwentythree" />
               </span>
-            }
+            </Menu.Item>
+            <Menu.Item className="logout" onClick={() => onClickLogout()}>
+              <Icon type="left-circle" />
+              <span>
+                <FormattedMessage id="nav.leftnavtwentyfour" />
+              </span>
+            </Menu.Item>
+          </Menu>
+        )}
+        {role === 4 && (
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
           >
-            <Menu.Item key="10">
-              <NavLink to="/report/ledger">
-                <FormattedMessage id="nav.leftnaveightteen" />
-              </NavLink>
+            <SubMenu
+              key="sub1"
+              title={
+                <span>
+                  <Icon type="user" />
+                  <span>
+                    <FormattedMessage id="nav.leftnavone" />
+                  </span>
+                </span>
+              }
+            >
+              <Menu.Item key="1">
+                <NavLink to="/employee">
+                  <FormattedMessage id="nav.leftnavthree" />
+                </NavLink>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <NavLink to="/user">
+                  <FormattedMessage id="nav.leftnavfour" />
+                </NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <Menu.Item className="logout" onClick={() => onClickLogout()}>
+              <Icon type="left-circle" />
+              <span>
+                <FormattedMessage id="nav.leftnavtwentyfour" />
+              </span>
             </Menu.Item>
-            <Menu.Item key="11">
-              <NavLink to="/report/employee/income">
-                <FormattedMessage id="nav.leftnavnineteen" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="12">
-              <NavLink to="/report/restaurant/user">
-                <FormattedMessage id="nav.leftnavtwenty" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="13">
-              <NavLink to="/report/restaurant/share">
-                <FormattedMessage id="nav.leftnavtwentyone" />
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item key="14">
-              <NavLink to="/report/employee/salary">
-                <FormattedMessage id="nav.leftnavtwentytwo" />
-              </NavLink>
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item key="15">
-            <Icon type="rocket" />
-            <span>
-              <FormattedMessage id="nav.leftnavtwentythree" />
-            </span>
-          </Menu.Item>
-          <Menu.Item className="logout" onClick={() => onClickLogout()}>
-            <Icon type="left-circle" />
-            <span>
-              <FormattedMessage id="nav.leftnavtwentyfour" />
-            </span>
-          </Menu.Item>
-        </Menu>
+          </Menu>
+        )}
       </Sider>
       <Layout>
         <Header style={{ background: "#fff", padding: 0 }}>
@@ -245,7 +284,8 @@ const HomePage = ({ children, logout, lang, localeSet }) => {
 
 function mapStateToProps(state) {
   return {
-    lang: state.locale.lang
+    lang: state.locale.lang,
+    role: state.employee.role
   };
 }
 

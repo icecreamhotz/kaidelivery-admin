@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 
 import { Route, HashRouter } from "react-router-dom";
 
+import jwt_decode from "jwt-decode";
+
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -13,7 +15,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import { userLoggedIn } from "./actions/user.js";
+import { userLoggedIn, userRole } from "./actions/user.js";
 
 import { localeSet } from "./actions/locale";
 
@@ -33,7 +35,9 @@ const store = createStore(
 
 if (localStorage.token) {
   const employee = { token: localStorage.token };
+  const decoded = jwt_decode(localStorage.token);
   store.dispatch(userLoggedIn(employee));
+  store.dispatch(userRole(decoded.emptype_id));
 }
 
 if (localStorage.lang) {

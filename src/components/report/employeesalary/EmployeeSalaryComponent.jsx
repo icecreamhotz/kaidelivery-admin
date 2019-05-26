@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Radio, Button, DatePicker } from "antd";
+import { Row, Radio, DatePicker } from "antd";
 import LineChart from "./LineChart";
 import API from "../../../helpers/api.js";
 import moment from "moment";
@@ -74,19 +74,9 @@ class EmployeeSalaryComponent extends Component {
   };
 
   render() {
-    const { changeComponent } = this.props;
     const { label, salaryData, value, day } = this.state;
     return (
       <div>
-        <Row>
-          <Button
-            type="primary"
-            icon="table"
-            onClick={() => changeComponent(0)}
-          >
-            View Table
-          </Button>
-        </Row>
         <Row
           style={{
             paddingTop: 15

@@ -156,7 +156,7 @@ class MyInfo extends Component {
     const { profile, preview, altimg, loading } = this.state;
     const previewImage =
       profile.emp_avatar !== null && preview === ""
-        ? `http://localhost:3000/employees/${profile.emp_avatar}`
+        ? `https://kaidelivery-api.herokuapp.com/employees/${profile.emp_avatar}`
         : preview;
     const altImage =
       profile.emp_avatar !== null && preview === ""
