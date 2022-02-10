@@ -8,7 +8,7 @@
     "chart.js": "^2.8.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "react": "^16.8.6",
     "react-async-script-loader": "^0.3.0",
     "react-chartjs-2": "^2.7.6",
